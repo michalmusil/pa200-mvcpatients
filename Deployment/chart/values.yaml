@@ -1,0 +1,25 @@
+replicaCount: 3
+
+image:
+  repository: idjohnson/freshmvcapp
+  tag: 0.1
+  pullPolicy: IfNotPresent
+  port: 8080
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  dbHost: your_host
+  dbName: patientsdb
+  dbUser: your_username
+  dbPassword: your_db_password # This will be overridden by the secret
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
