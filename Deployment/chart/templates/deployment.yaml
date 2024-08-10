@@ -26,6 +26,8 @@ spec:
           value: "{{ .Values.env.dbName }}"
         - name: DB_USER
           value: "{{ .Values.env.dbUser }}"
+        - name: DB_PORT
+          value: "{{ .Values.env.dbPort }}"
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
