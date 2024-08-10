@@ -1,7 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MvcPatients.Data;
+using ConfigurationPlaceholders;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Using ConfigurationPlaceholders
+builder
+     .AddConfigurationPlaceholders( new EnvironmentVariableResolver() ); 
+
 builder.Services.AddDbContext<MvcPatientsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MvcPatientsContext") ?? throw new InvalidOperationException("Connection string 'MvcPatientsContext' not found.")));
 
