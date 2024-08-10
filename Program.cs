@@ -1,9 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MvcPatients.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<MvcPatientsContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("MvcPatientsContext") ?? throw new InvalidOperationException("Connection string 'MvcPatientsContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
