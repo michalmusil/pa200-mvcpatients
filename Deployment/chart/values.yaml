@@ -17,6 +17,15 @@ env:
   dbPort: 5432
   dbPassword: your_db_password # This will be overridden by the secret
 
+otel:
+  protocol: "http/protobuf" # or grpc
+  endpoint: "https://otlp.nr-data.net:4318/v1/traces"
+  servicename: "MvcPatients"
+  headers: "api-key=ba2269284ec354ec699572be2a5c50e6FFFFNRAL"
+  attributes: "app=MvcPatients"
+
+imagePullSecrets: [] # Add your secret name here if needed
+
 resources: {}
 
 nodeSelector: {}
