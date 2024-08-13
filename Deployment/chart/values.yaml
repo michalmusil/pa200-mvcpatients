@@ -19,7 +19,7 @@ env:
 
 otel:
   protocol: "http/protobuf" # or grpc
-  endpoint: "https://otlp.nr-data.net:4318/v1/traces"
+  endpoint: "https://otlp.nr-data.net:4318/"
   servicename: "MvcPatients"
   headers: "api-key=xxxxxxxxxxxxxxxxxxxxxxxxxNRAL"
   attributes: "app=MvcPatients"
