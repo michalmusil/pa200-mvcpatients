@@ -80,3 +80,59 @@ This can also be done locally with a populated appsettings.json and the migrate 
 $ dotnet ef migrations add InitialCreate
 $ dotnet ef database update
 ```
+
+# OTLP version
+
+we can install with New Relic OTLP
+
+```
+$ helm upgrade mypatientmvc -n patientsmvc --set env.dbHost=isaac-MacBookAir --set env.dbName=patientsdb --set env.dbPort=5432 --set env.dbUser=patientsuser --set env.dbPassword=patientPassword1  --set image.repository=idjohnson/freshmvcapp --set image.tag=1.3  --set imagePullSecrets[0].name=myharborreg --set otel.headers="api-key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxNRAL" --set otel.endpoint="https://otlp.nr-data.net:4318/" ./Deployment/chart/
+Release "mypatientmvc" has been upgraded. Happy Helming!
+NAME: mypatientmvc
+LAST DEPLOYED: Sun Aug 11 19:47:53 2024
+NAMESPACE: patientsmvc
+STATUS: deployed
+REVISION: 5
+TEST SUITE: None
+```
+
+or a local collector
+```
+$ helm upgrade mypatientmvc -n patientsmvc --set env.dbHost=isaac-MacBookAir --set env.dbName=patientsdb --set env.dbPort=5432 --set env.dbUser=patientsuser --set env.dbPassword=patientPassword1  --set image.repository=idjohnson/freshmvcapp --set image.tag=1.3  --set imagePullSecrets[0].name=myharborreg --set otel.headers="" --set otel.endpoint="https://otelcollector.opentelementry.svc.cluster.local:4318/" ./Deployment/chart/
+Release "mypatientmvc" has been upgraded. Happy Helming!
+NAME: mypatientmvc
+LAST DEPLOYED: Sun Aug 11 19:47:53 2024
+NAMESPACE: patientsmvc
+STATUS: deployed
+REVISION: 5
+TEST SUITE: None
+```
+
+Or just dump to a localhost to stop sending metrics, traces and logs
+```
+$ helm upgrade mypatientmvc -n patientsmvc --set env.dbHost=isaac-MacBookAir --set env.dbName=patientsdb --set env.dbPort=5432 --set env.dbUser=patientsuser --set env.dbPassword=patientPassword1  --set image.repository=idjohnson/freshmvcapp --set image.tag=1.3  --set imagePullSecrets[0].name=myharborreg --set otel.headers="" --set otel.endpoint="http://localhost:4318/" ./Deployment/chart/
+```
+
+I can save the changes thus far
+```
+builder@DESKTOP-QADGF36:~/Workspaces/MvcPatients$ git status
+On branch newrelic
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   Deployment/chart/Chart.yaml
+        modified:   Deployment/chart/templates/deployment.yaml
+        modified:   Deployment/chart/values.yaml
+        modified:   Dockerfile
+        modified:   MvcPatients.csproj
+        modified:   Program.cs
+        modified:   Readme.md
+        modified:   Views/Home/Index.cshtml
+        modified:   Views/Shared/_Layout.cshtml
+
+no changes added to commit (use "git add" and/or "git commit -a")
+builder@DESKTOP-QADGF36:~/Workspaces/MvcPatients$ git add -A
+builder@DESKTOP-QADGF36:~/Workspaces/MvcPatients$ git commit -m "Updates"
+[newrelic 9405dd1] Updates
+ 9 files changed, 125 insertions(+), 24 deletions(-)
+```

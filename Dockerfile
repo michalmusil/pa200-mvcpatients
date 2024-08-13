@@ -20,6 +20,15 @@ ENV DB_HOST=your_host
 ENV DB_NAME=patientsdb
 ENV DB_USER=your_username
 ENV DB_PASSWORD=your_password
+ENV OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+ENV OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318/v1/traces
+ENV OTEL_SERVICE_NAME=MvcPatients
+ENV OTEL_EXPORTER_OTLP_HEADERS=api-key=xxxxxxxxxxxxxxxxxxxxxxxNRAL
+ENV OTEL_RESOURCE_ATTRIBUTES=app=MvcPatients
+
+# Set the inotify limits
+RUN echo "fs.inotify.max_user_instances=8192" >> /etc/sysctl.conf && \
+    echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 
 # Expose the port
 EXPOSE 8080

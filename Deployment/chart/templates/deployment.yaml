@@ -28,8 +28,24 @@ spec:
           value: "{{ .Values.env.dbUser }}"
         - name: DB_PORT
           value: "{{ .Values.env.dbPort }}"
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: "{{ .Values.otel.protocol }}"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "{{ .Values.otel.endpoint }}"
+        - name: OTEL_SERVICE_NAME
+          value: "{{ .Values.otel.servicename }}"
+        - name: OTEL_EXPORTER_OTLP_HEADERS
+          value: "{{ .Values.otel.headers }}"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "{{ .Values.otel.attributes }}"
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db-secret
               key: DB_PASSWORD
+      imagePullSecrets:
+      {{- if .Values.imagePullSecrets }}
+      {{- range .Values.imagePullSecrets }}
+      - name: {{ .name }}
+      {{- end }}
+      {{- end }} 
