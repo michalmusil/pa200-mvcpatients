@@ -1,24 +1,16 @@
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MvcPatients.Data;
-using ConfigurationPlaceholders;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
-using OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Custom ActivitySource for the application
 //var appActivitySource = new System.Diagnostics.ActivitySource("MvcPatient.App");
 
-// Using ConfigurationPlaceholders
-builder
-     .AddConfigurationPlaceholders( new EnvironmentVariableResolver() ); 
+builder.Configuration.AddEnvironmentVariables(prefix: "Patients__");
 
 builder.Services.AddDbContext<MvcPatientsContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MvcPatientsContext") ?? throw new InvalidOperationException("Connection string 'MvcPatientsContext' not found.")));
