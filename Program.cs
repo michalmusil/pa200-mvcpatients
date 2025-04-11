@@ -1,9 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using MvcPatients.Data;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,41 +15,41 @@ builder.Services.AddDbContext<MvcPatientsContext>(options =>
 builder.Services.AddControllersWithViews();
 
 // Initialize OTel builder
-var otel = builder.Services.AddOpenTelemetry();
+// var otel = builder.Services.AddOpenTelemetry();
 
 // Set OTel Resources
 // Configure OpenTelemetry Resources with the application name
 //otel.ConfigureResource(resource => resource
 // .AddService(serviceName: builder.Environment.ApplicationName));
 
-var otelResources = ResourceBuilder.CreateEmpty()
-    .AddTelemetrySdk()
-    .AddEnvironmentVariableDetector();
+// var otelResources = ResourceBuilder.CreateEmpty()
+//     .AddTelemetrySdk()
+//     .AddEnvironmentVariableDetector();
 
 // Add Metrics for ASP.NET Core and our custom metrics and export to Prometheus
-otel.WithMetrics(metrics => metrics
-    // Metrics provider from OpenTelemetry
-    .AddAspNetCoreInstrumentation()
-    .SetResourceBuilder(otelResources)
-    // Metrics provides by ASP.NET Core in .NET 8
-    .AddMeter("Microsoft.AspNetCore.Hosting")
-    .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
-    .AddOtlpExporter());
+// otel.WithMetrics(metrics => metrics
+//     // Metrics provider from OpenTelemetry
+//     .AddAspNetCoreInstrumentation()
+//     .SetResourceBuilder(otelResources)
+//     // Metrics provides by ASP.NET Core in .NET 8
+//     .AddMeter("Microsoft.AspNetCore.Hosting")
+//     .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
+    // .AddOtlpExporter());
 
 // Configure tracing
-otel.WithTracing(tracing =>
-{
-   tracing.AddAspNetCoreInstrumentation();
-   tracing.SetResourceBuilder(otelResources);
-   tracing.AddOtlpExporter();
-   // Just for troubleshooting purposes to see if spans are generated and printed out to logs.
-   //tracing.AddConsoleExporter();
-});
+// otel.WithTracing(tracing =>
+// {
+//    tracing.AddAspNetCoreInstrumentation();
+//    tracing.SetResourceBuilder(otelResources);
+//    tracing.AddOtlpExporter();
+//    // Just for troubleshooting purposes to see if spans are generated and printed out to logs.
+//    //tracing.AddConsoleExporter();
+// });
 
 // Send Logs
-otel.WithLogging(logging => logging
-        .SetResourceBuilder(otelResources)
-        .AddOtlpExporter());
+// otel.WithLogging(logging => logging
+//         .SetResourceBuilder(otelResources)
+//         .AddOtlpExporter());
 
 //builder.Logging.AddOpenTelemetry(options =>
 //{
