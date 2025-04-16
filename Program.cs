@@ -1,5 +1,8 @@
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using MvcPatients.Data;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // builder.Configuration.AddEnvironmentVariables(prefix: "Patients__");
 
-builder.Services.AddDbContext<MvcPatientsContext>();
+var connectionString = builder.Configuration.GetConnectionString("MvcPatientsContextAzure");
+var dataSource = new NpgsqlDataSourceBuilder(connectionString)
+    .UsePeriodicPasswordProvider(async (_, ct) =>
+    {
+        var credentials = new DefaultAzureCredential();
+        var token = await credentials.GetTokenAsync(
+            new TokenRequestContext(["https://ossrdbms-aad.database.windows.net/.default"]), ct);
+        return token.Token;
+    }, TimeSpan.FromHours(4), TimeSpan.FromSeconds(10))
+    .Build();
+
+builder.Services.AddDbContext<MvcPatientsContext>(options => options.UseNpgsql(dataSource));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,7 +47,7 @@ builder.Services.AddControllersWithViews();
 //     // Metrics provides by ASP.NET Core in .NET 8
 //     .AddMeter("Microsoft.AspNetCore.Hosting")
 //     .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
-    // .AddOtlpExporter());
+// .AddOtlpExporter());
 
 // Configure tracing
 // otel.WithTracing(tracing =>
