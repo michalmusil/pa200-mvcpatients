@@ -6,10 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Custom ActivitySource for the application
 //var appActivitySource = new System.Diagnostics.ActivitySource("MvcPatient.App");
 
-builder.Configuration.AddEnvironmentVariables(prefix: "Patients__");
+// builder.Configuration.AddEnvironmentVariables(prefix: "Patients__");
 
-builder.Services.AddDbContext<MvcPatientsContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("MvcPatientsContext") ?? throw new InvalidOperationException("Connection string 'MvcPatientsContext' not found.")));
+builder.Services.AddDbContext<MvcPatientsContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
